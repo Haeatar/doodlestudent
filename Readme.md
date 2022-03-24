@@ -13,7 +13,7 @@ Docker compose pour le déploiement :
 docker-compose up -d
 ```
 
-Accès : doodlefront.localhost
+Accès en local : doodlefront.localhost
 
 ## Remote meetings planning
 
