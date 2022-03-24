@@ -1,0 +1,60 @@
+version: "3.3"
+services:
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=tlc
+      - MYSQL_USER=tlc
+      - MYSQL_PASSWORD=tlc
+  etherpad:
+    image: etherpad/etherpad
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./APIKEY.txt:/opt/etherpad-lite/APIKEY.txt
+  mail:
+    image: bytemark/smtp
+    ports:
+      - "2525:25"
+  backend:
+    image:  doodlebackend
+    command: sh -c 'java -Dquarkus.datasource.jdbc.url="jdbc:mysql://db:3306/tlc?useUnicode=true&serverTimezone=Europe/Paris" -jar /deployments/app.jar'
+    depends_on:
+      - db
+      - etherpad
+      - mail
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+  phpmyadmin:
+    container_name: phpmyadmin
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ABSOLUTE_URI=https://phpmyadmin.diverse-team.fr/
+    ports:
+      - 8084:80
+    volumes:
+      - ./wp-files:/var/www/html
+  nginx_gateway:
+    image: doodlefront
+    ports:
+      - 80:8080
+      - 443:8443
+    environment:
+      - SERVER_NAME=localhost
+      - SERVE_FILES=yes
+      - DISABLE_DEFAULT_SERVER=no
+      - PROXY_REAL_IP=yes
+      - AUTO_LETS_ENCRYPT=no
+      - REDIRECT_HTTP_TO_HTTPS=no
+      - USE_LIMIT_REQ=no
+      - HTTP2=no
+      - ALLOWED_METHODS=GET|POST|HEAD
+      - FEATURE_POLICY=accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'none'; camera 'none'; display-capture 'none'; document-domain 'none'; encrypted-media 'none'; fullscreen 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture 'none'; speaker 'none'; sync-xhr 'self'; usb 'none'; vibrate 'none'; vr 'none'
+    volumes:
+      - ./server-confs:/server-confs:ro
