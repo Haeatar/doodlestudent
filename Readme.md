@@ -1,4 +1,21 @@
-# Remote meetings planning
+# TLC Project (Delaunay Tristan & Delaunay Julien)
+
+## How to run the project
+
+Run.sh permet la création des 2 images pour le back et le front (doodlebackend + doodlefront) :
+
+```
+./run.sh
+```
+Docker compose pour le déploiement : 
+
+```
+docker-compose up -d
+```
+
+Accès : doodlefront.localhost
+
+## Remote meetings planning
 
 This project is used in a course on the *ops* part at the [University of Rennes](https://www.univ-rennes1.fr/), France. It is a kind of doodle clone developed in so-called "native cloud" technologies in order to allow students to work on a continuous deployment chain in a containerized environment. Among the feature, the application automatically initializes a pad for the meeting and a chat room for the meeting participants.
 

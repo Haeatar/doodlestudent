@@ -40,7 +40,7 @@ services:
       - 8084:80
     volumes:
       - ./wp-files:/var/www/html
-  nginx_gateway:
+  gateway:
     image: doodlefront
     ports:
       - 80:8080
